@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OSI Shop | General Store</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f6f8;color:#111}
+header{position:sticky;top:0;z-index:5;background:#111;color:#fff;padding:16px 6%;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:28px;font-weight:900;letter-spacing:2px}.nav{display:flex;gap:18px;align-items:center}.nav a{color:#fff;text-decoration:none}.cart{background:#fff;color:#111;padding:10px 16px;border-radius:999px;font-weight:800}
+.hero{padding:70px 7%;background:linear-gradient(135deg,#111,#353941);color:#fff}.hero h1{font-size:clamp(38px,6vw,64px);margin:0 0 14px}.hero p{font-size:20px;color:#ddd;max-width:650px}.btn{display:inline-block;background:#fff;color:#111;padding:14px 24px;border-radius:12px;text-decoration:none;font-weight:900;margin-top:12px}
+.wrap{max-width:1150px;margin:auto;padding:50px 20px}.bar{display:flex;justify-content:space-between;gap:15px;align-items:center;margin-bottom:22px}.bar input{max-width:320px}
+input,select{width:100%;padding:13px;border:1px solid #ddd;border-radius:10px;font-size:15px;background:#fff}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.card{background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 8px 25px #0000000d}.pic{height:220px;background:linear-gradient(145deg,#e3e5e8,#fff);display:flex;align-items:center;justify-content:center;font-size:70px}.body{padding:20px}.price{font-size:25px;font-weight:900}.old{text-decoration:line-through;color:#999;margin-right:8px}.tag{display:inline-block;background:#eee;padding:5px 9px;border-radius:8px;font-size:12px;margin-bottom:8px}.buy{width:100%;padding:13px;border:0;border-radius:10px;background:#111;color:#fff;font-weight:900;margin-top:12px;cursor:pointer}
+.cartbox{position:fixed;right:20px;bottom:20px;background:#111;color:#fff;padding:15px 20px;border-radius:15px;display:none;z-index:10}
+form{background:#fff;padding:28px;border-radius:20px;box-shadow:0 8px 30px #00000012;max-width:700px;margin:auto}
+footer{background:#111;color:#aaa;text-align:center;padding:30px;margin-top:30px}
+@media(max-width:800px){.grid{grid-template-columns:1fr 1fr}.nav a{display:none}}
+@media(max-width:520px){.grid{grid-template-columns:1fr}.hero{padding:50px 20px}.bar{display:block}.bar input{max-width:none;margin-top:12px}}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">OSI SHOP</div>
+<div class="nav"><a href="#products">المنتجات</a><a href="#order">اطلب الآن</a><div class="cart">🛒 <span id="count">0</span></div></div>
+</header>
+
+<section class="hero">
+<h1>كل اللي محتاجه في مكان واحد.</h1>
+<p>OSI Shop — متجر عام لاكتشاف منتجات عملية ومميزة بأسعار تنافسية، مع الدفع عند الاستلام.</p>
+<a class="btn" href="#products">تصفح المنتجات</a>
+</section>
+
+<main>
+<section class="wrap" id="products">
+<div class="bar">
+<h2>منتجاتنا</h2>
+<input id="search" placeholder="ابحث عن منتج..." oninput="render()">
+</div>
+<div class="grid" id="grid"></div>
+</section>
+
+<section class="wrap" id="order">
+<h2>إتمام الطلب</h2>
+<form onsubmit="submitOrder(event)">
+<label>المنتجات المختارة</label>
+<input id="selected" readonly value="لم يتم اختيار منتج">
+<label>الاسم</label><input required placeholder="اسم العميل">
+<label>رقم الهاتف</label><input required type="tel" placeholder="01xxxxxxxxx">
+<label>المحافظة</label><input required placeholder="المحافظة">
+<label>العنوان</label><input required placeholder="العنوان بالتفصيل">
+<button class="buy" type="submit">تأكيد الطلب — الدفع عند الاستلام</button>
+<p id="msg" style="text-align:center"></p>
+</form>
+</section>
+</main>
+
+<div class="cartbox" id="cartbox">تمت إضافة المنتج للسلة ✅</div>
+<footer>© 2026 OSI Shop — General Store</footer>
+
+<script>
+const products=[
+ {id:1,name:"منتج تجريبي 1",category:"Gadgets",price:499,old:599,emoji:"🎧"},
+ {id:2,name:"منتج تجريبي 2",category:"Home",price:349,old:449,emoji:"🏠"},
+ {id:3,name:"منتج تجريبي 3",category:"Car",price:599,old:699,emoji:"🚗"}
+];
+let selectedProduct=null;
+
+function render(){
+ const q=document.getElementById("search").value.toLowerCase();
+ const list=products.filter(p=>(p.name+" "+p.category).toLowerCase().includes(q));
+ document.getElementById("grid").innerHTML=list.map(p=>`
+ <article class="card">
+  <div class="pic">${p.emoji}</div>
+  <div class="body">
+   <span class="tag">${p.category}</span>
+   <h3>${p.name}</h3>
+   <p><span class="price">${p.price} جنيه</span> <span class="old">${p.old} جنيه</span></p>
+   <button class="buy" onclick="choose(${p.id})">أضف للسلة</button>
+  </div>
+ </article>`).join("");
+}
+function choose(id){
+ selectedProduct=products.find(p=>p.id===id);
+ document.getElementById("count").textContent="1";
+ document.getElementById("selected").value=selectedProduct.name+" — "+selectedProduct.price+" جنيه";
+ document.getElementById("cartbox").style.display="block";
+ setTimeout(()=>document.getElementById("cartbox").style.display="none",1800);
+ location.hash="order";
+}
+function submitOrder(e){
+ e.preventDefault();
+ if(!selectedProduct){document.getElementById("msg").textContent="اختار منتج أولًا.";return}
+ document.getElementById("msg").textContent="تم تسجيل الطلب التجريبي ✅ — قبل الإطلاق نربطه بنظام استقبال الطلبات.";
+}
+render();
+</script>
+</body>
+</html>
