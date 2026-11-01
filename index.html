@@ -26,7 +26,7 @@ footer{background:#111;color:#aaa;text-align:center;padding:28px;margin-top:30px
 <footer>© 2026 OSI Shop — General Store</footer>
 <script src="products.js"></script>
 <script>
-let cart=[];const WHATSAPP_NUMBER="201000000000";
+let cart=[];const WHATSAPP_NUMBER="201067924983";
 function money(n){return Number(n).toLocaleString("ar-EG")+" جنيه"}
 function imageHTML(p){return p.image?`<img src="${p.image}" alt="${p.name}" loading="lazy">`:`<div class="emoji">${p.emoji||"🛍️"}</div>`}
 function setupCategories(){let c=[...new Set(PRODUCTS.filter(p=>p.active).map(p=>p.category).filter(Boolean))];document.getElementById("category").innerHTML='<option value="">كل الأقسام</option>'+c.map(x=>`<option>${x}</option>`).join("")}
